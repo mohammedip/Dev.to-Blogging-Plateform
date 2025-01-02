@@ -30,8 +30,6 @@ CREATE TABLE articles (
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    excerpt TEXT,
-    meta_description VARCHAR(160),
     category_id BIGINT NOT NULL,
     featured_image VARCHAR(255),
     status ENUM('draft', 'published', 'scheduled') NOT NULL DEFAULT 'draft',
@@ -354,3 +352,5 @@ LEFT JOIN article_tags at ON a.id = at.article_id
 LEFT JOIN tags t ON at.tag_id = t.id
 GROUP BY a.id;
 
+ALTER Table articles
+drop COLUMN meta_description;
