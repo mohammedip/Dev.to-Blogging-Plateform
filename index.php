@@ -1,4 +1,11 @@
+<?php
+use App\Tag;
+use App\Categorie;
+use App\User;
+use App\Article;
 
+require 'vendor/autoload.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,14 +20,13 @@
     <title>DevBlog - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="View/pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="View/pages/css/sb-admin-2.min.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -28,7 +34,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-       
+        <?php  include 'View/pages/components/sidebar.php'; ?>
 
 
         <!-- Content Wrapper -->
@@ -37,7 +43,7 @@
             <!-- Main Content -->
             <div id="content">
 
-              
+                <?php  include 'View/pages/components/topbar.php'; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -58,7 +64,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Articles</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">55555555555555</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php Article::getCountArticle(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-newspaper fa-2x text-gray-300"></i>
@@ -76,7 +82,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Users</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">55555555</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php User::getCount(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -94,7 +100,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tags
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">555555555</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php Tag::getCountTags(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-tags fa-2x text-gray-300"></i>
@@ -111,7 +117,7 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Categories</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">55555555555</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php Categorie::getCountCategories(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-folder fa-2x text-gray-300"></i>
@@ -151,10 +157,10 @@
                     <div class="mr-3">
                         <div class="icon-circle bg-primary text-white">
                             <?php if($user['profile_picture_url']): ?>
-                                <img src="" 
+                                <img src="<?= htmlspecialchars($user['profile_picture_url']) ?>" 
                                      class="rounded-circle" 
                                      style="width: 40px; height: 40px; object-fit: cover;"
-                                     alt="">
+                                     alt="<?= htmlspecialchars($user['username']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user"></i>
                             <?php endif; ?>
@@ -162,11 +168,11 @@
                     </div>
                     <div class="flex-grow-1">
                         <div class="small text-gray-500">Author #<?= $index + 1 ?></div>
-                        <div class="font-weight-bold">555555555555</div>
+                        <div class="font-weight-bold"><?= htmlspecialchars($user['username']) ?></div>
                         <div class="text-gray-800">
-                            555555555555555 articles
+                            <?= number_format($user['article_count']) ?> articles
                             <span class="mx-1">•</span>
-                            555555555555555 total views
+                            <?= number_format((int)$user['total_views']) ?> total views
                         </div>
                     </div>
                     <div class="ml-2">
@@ -361,7 +367,7 @@
             </div>
             <!-- End of Main Content -->
 
-            <?php include 'components/footer.php'; ?>
+            <?php  include 'View/pages/components/footer.php'; ?>
 
         </div>
         <!-- End of Content Wrapper -->
@@ -395,21 +401,21 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="View/pages/vendor/jquery/jquery.min.js"></script>
+    <script src="View/pages/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="View/pages/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="View/pages/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="View/pages/vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <script src="View/pages/js/demo/chart-area-demo.js"></script>
+    <script src="View/pages/js/demo/chart-pie-demo.js"></script>
         <!-- Initialize the pie chart -->
         <script>
     // Set new default font family and font color to mimic Bootstrap's default styling
@@ -461,11 +467,11 @@
     </script>
 
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="View/pages/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="View/pages/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
+    <script src="View/pages/js/demo/datatables-demo.js"></script>
 </body>
 
 </html>
