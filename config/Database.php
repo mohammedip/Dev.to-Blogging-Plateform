@@ -4,7 +4,7 @@ namespace Src;
 // use PDO;
 use Dotenv\Dotenv ,PDO;
 
-require '../vendor/autoload.php'; 
+require_once dirname(__DIR__) . './vendor/autoload.php'; 
 
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
@@ -24,9 +24,9 @@ $dsn = "mysql:host=$server_name;dbname=$dataBase_name;charset=utf8mb4";
 
 try {
 
-    $pdo = new PDO($dsn, $user_name, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    $this->pdo = new PDO($dsn, $user_name, $password);
+    $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
 } catch (PDOException $e) {
 
     die("Connection failed: " . $e->getMessage());
