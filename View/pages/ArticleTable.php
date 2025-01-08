@@ -24,7 +24,7 @@ require_once '../../vendor/autoload.php';
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Custom styles for this template -->
     <link href="./css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -66,20 +66,21 @@ require_once '../../vendor/autoload.php';
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Tag DataTables</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Article DataTables</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
-                                            <th>title</th>
+                                            
+                                            <th>Title</th>
+                                            <th>content</th>
                                             <th>category</th>
-                                            <th>featured_image</th>
+                                            <th>Tag</th>
                                             <th>status</th>
-                                            <th>scheduled_date</th>
                                             <th>author</th>
+                                            <th>scheduled_date</th>
                                             <th>created_at</th>
                                             <th>updated_at</th>
                                             <th>views</th>
@@ -87,30 +88,41 @@ require_once '../../vendor/autoload.php';
                                         </tr>
                                     </thead>
                                     <tbody>
+                                          <!-- <td>
+                                         <span class="badge badge-primary badge-pill">' . $article['tags_name'] . '</span>
+                                        </td> -->
                                         <?php  $articles=Article::getAllArticles();
-                                        
                                        foreach ($articles as $article) {
 
+                                            $tags = explode(',', $article['tags_name']);
+                                            
+
                                         echo '<tr>
-                                        <td>' . $article['id'] . '</td>
+                                        
                                         <td>' . $article['title'] . '</td>
-                                        <td>' . $article['slug'] . '</td>
                                         <td>' . $article['content'] . '</td>
-                                        <td>' . $article['category_id'] . '</td>
-                                        <td>' . $article['featured_image'] . '</td>
+                                        <td>' . $article['categorie'] . '</td>
+                                        <td>';
+                                       foreach($tags as $tag) {
+                                          echo'  <span class="badge badge-primary mr-1">' . htmlspecialchars($tag) . '</span>';
+                                       }
+                                        echo'</td>
                                         <td>' . $article['status'] . '</td>
+                                        <td>' . $article['auteurName'] . '</td>
                                         <td>' . $article['scheduled_date'] . '</td>
-                                        <td>' . $article['author_id'] . '</td>
                                         <td>' . $article['created_at'] . '</td>
                                         <td>' . $article['updated_at'] . '</td>
                                         <td>' . $article['views'] . '</td>
                                         <td>
-                                            <a href="../Forms/ArticleUpdate.php" class="btn btn-warning btn-sm">Update</a>
-                                            <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="../Forms/ArticleUpdate.php?id='.$article['articles_id'].'" class="btn btn-warning btn-sm"><i class="fa-solid fa-pen"></i></a>
+                                            <a href="../../classes/Article.php?function=delete&id='.$article['articles_id'].'" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+                                            <a href="../Forms/singleArticle.php?id='.$article['articles_id'].'" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
                                         </td>
-                                    </tr>';
-                              
-                                       } ?> 
+                                   </tr>';
+                                 
+                                                
+                                      }
+                                        ?> 
                                     </tbody>
                                 </table>
                             </div>
