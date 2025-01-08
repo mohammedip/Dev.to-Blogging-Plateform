@@ -31,6 +31,7 @@ CREATE TABLE articles (
     slug VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     category_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
     featured_image VARCHAR(255),
     status ENUM('draft', 'published', 'scheduled') NOT NULL DEFAULT 'draft',
     scheduled_date DATETIME NULL,
@@ -44,6 +45,8 @@ CREATE TABLE articles (
     KEY idx_articles_status_date (status, scheduled_date),
     CONSTRAINT fk_articles_category FOREIGN KEY (category_id) 
         REFERENCES categories (id),
+    CONSTRAINT fk_articles_tag FOREIGN KEY (tag_id) 
+        REFERENCES tags(id);    
     CONSTRAINT fk_articles_author FOREIGN KEY (author_id) 
         REFERENCES users (id),
     CONSTRAINT chk_scheduled_date CHECK (
@@ -81,8 +84,8 @@ INSERT INTO categories (id, name) VALUES
 INSERT INTO users (id, username, email, password_hash, bio, profile_picture_url) VALUES
 (5, 'john_doe', 'john@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Senior Web Developer with 10 years of experience', 'profiles/john.jpg'),
 (6, 'jane_smith', 'jane@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Full Stack Developer and AI enthusiast', 'profiles/jane.jpg'),
-(7, 'michelle_wilson', 'michelle@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'DevOps Engineer and Cloud Architect', 'profiles/mike.jpg');
-
+(7, 'michelle_wilson', 'michelle@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'DevOps Engineer and Cloud Architect', 'profiles/mike.jpg'),
+(8,'mohammed', 'reida@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Senior Web Developer with 10 years of experience', 'profiles/john.jpg','auteur');
 -- Insert Articles
 
 INSERT INTO articles (title, slug, content, category_id, featured_image, status, scheduled_date, author_id) VALUES
@@ -111,4 +114,6 @@ INSERT INTO article_tags (article_id, tag_id) VALUES
 (5, 4),   -- "Data Science for Beginners" tagged as Data Science
 (6, 5);   -- "The Future of Artificial Intelligence" tagged as Artificial Intelligence
           -- "The Future of Artificial Intelligence" tagged as AI
+
+
 
