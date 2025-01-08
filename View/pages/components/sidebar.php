@@ -40,7 +40,9 @@
                         <h6 class="collapse-header">Article Management:</h6>
                         <a class="collapse-item" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/ArticleTable.php">View All Articles</a>
                         <a class="collapse-item" href="http://localhost/Dev.to-Blogging-Plateform/View/Forms/ArticleAdd.php">Add New Article</a>
-                        <a class="collapse-item" href="http://localhost/Dev.to-Blogging-Plateform/View/Forms/ArticleDrafts.php">Drafts</a>
+                        <a class="collapse-item" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/ArticleDraft.php">Draft</a>
+                       
+                       
                         
                     </div>
                 </div>
@@ -108,7 +110,7 @@
 
             <!-- Nav Item - Your Profile -->
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/profile.php">
+                <a class="nav-link" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/profile.php?id=<?php $user['id'] ?>">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Your Profile</span>
                 </a>
