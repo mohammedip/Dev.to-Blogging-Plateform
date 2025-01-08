@@ -49,6 +49,51 @@ class CRUD {
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+// statistique ------------------------------------
+
+public static function getTopArticles($limit = 5)
+{
+    try {
+        $sql = "SELECT a.*, u.username
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                ORDER BY a.views DESC, a.created_at DESC
+                LIMIT " . (int)$limit;
+
+        $stmt = self::$pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return [];
+    }
+}
+public static function getTopUsers($limit = 5) {
+    try {
+        $sql = "SELECT u.*, COUNT(a.id) as article_count, SUM(a.views) as total_views
+                FROM users u
+                LEFT JOIN articles a ON u.id = a.author_id
+                WHERE u.role in ('auteur','admin')
+                GROUP BY u.id
+                ORDER BY total_views DESC, article_count DESC
+                LIMIT " . (int)$limit;
+
+        $stmt = self::$pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return [];
+    }
+}
+public static function getCategoryStats(){
+    $sql = "SELECT COUNT(*) as article_count, categories.name as category_name FROM articles JOIN categories ON articles.category_id = categories.id GROUP BY category_name;";
+    $stmt = self::$pdo->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchALL(\PDO::FETCH_ASSOC);
+    return $result;
+} 
 }
 
 $conx = Database::getInstance();
