@@ -5,6 +5,30 @@ use App\User;
 use App\Article;
 
 require 'vendor/autoload.php';
+
+$category_stats =Categorie:: get_category_stats();
+$top_users = User::get_top_users();
+$top_articles = Article::get_top_articles();
+
+// Prepare data for the chart
+$categories = [];
+$counts = [];
+// Define colors for the chart
+$colors = [
+    'rgb(78, 115, 223)',    // primary
+    'rgb(28, 200, 138)',    // success
+    'rgb(54, 185, 204)',    // info
+    'rgb(246, 194, 62)',    // warning
+    'rgb(231, 74, 59)',     // danger
+    'rgb(133, 135, 150)',   // secondary
+    'rgb(90, 92, 105)',     // dark
+    'rgb(244, 246, 249)'    // light
+];
+
+foreach ($category_stats as $stat) {
+    $categories[] = $stat['category_name'];
+    $counts[] = $stat['article_count'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -147,7 +171,7 @@ require 'vendor/autoload.php';
                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                     aria-labelledby="dropdownMenuLink">
                     <div class="dropdown-header">Actions:</div>
-                    <a class="dropdown-item" href="users.php">View All Users</a>
+                    <a class="dropdown-item" href="View/pages/UserTable.php">View All Users</a>
                 </div>
             </div>
         </div>
@@ -176,7 +200,7 @@ require 'vendor/autoload.php';
                         </div>
                     </div>
                     <div class="ml-2">
-                        <a href="./entities/users/user-profile.php?id=<?= $user['id'] ?>"
+                        <a href="./View/pages/profile.php?id=<?= $user['id'] ?>"
                            class="btn btn-primary btn-sm">
                             View Profile
                         </a>
@@ -201,7 +225,7 @@ require 'vendor/autoload.php';
                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                     aria-labelledby="dropdownMenuLink2">
                     <div class="dropdown-header">Actions:</div>
-                    <a class="dropdown-item" href="./entities/articles/articles.php">View All Articles</a>
+                    <a class="dropdown-item" href="./View/pages/ArticleTable.php">View All Articles</a>
                 </div>
             </div>
         </div>
@@ -216,7 +240,7 @@ require 'vendor/autoload.php';
                     <div class="flex-grow-1">
                         <div class="small text-gray-500">
                             Published <?= date('M d, Y', strtotime($article['created_at'])) ?>
-                            by <?= htmlspecialchars($article['author_name']) ?>
+                            by <?= htmlspecialchars($article['username']) ?>
                         </div>
                         <div class="font-weight-bold"><?= htmlspecialchars($article['title']) ?></div>
                         <div class="text-gray-800">
@@ -225,7 +249,7 @@ require 'vendor/autoload.php';
                         </div>
                     </div>
                     <div class="ml-2">
-                        <a href="./entities/articles/view-article.php?id=<?= $article['id'] ?>"
+                        <a href="./View/Forms/singleArticle.php?id=<?= $article['id'] ?>"
                            class="btn btn-success btn-sm">
                             Read Article
                         </a>
@@ -278,88 +302,6 @@ require 'vendor/autoload.php';
                             </div>
                         </div>
                     </div>
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Recent Articles</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Tags</th>
-                                            <th>Views</th>
-                                            <th>Created At</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Tags</th>
-                                            <th>Views</th>
-                                            <th>Created At</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                    <?php foreach($articles as $article): ?>
-                                        <tr>
-                                            <td>
-                                                <img src="<?= htmlspecialchars($article['featured_image']) ?>" 
-                                                    alt="Thumbnail" 
-                                                    class="img-thumbnail mr-2" 
-                                                    style="width: 50px; height: 50px; object-fit: cover;">
-                                                <?= htmlspecialchars($article['title']) ?>
-                                            </td>
-                                            <td><?= htmlspecialchars($article['author_name']) ?></td>
-                                            <td><?= htmlspecialchars($article['category_name']) ?></td>
-                                            <td>
-                                                <?php
-                                                if ($article['tags']) {
-                                                    $tags = explode(',', $article['tags']);
-                                                    foreach($tags as $tag) {
-                                                        echo '<span class="badge badge-primary mr-1">' . htmlspecialchars($tag) . '</span>';
-                                                    }
-                                                }
-                                                ?>
-                                            </td>
-                                            <td data-order="<?= $article['views'] ?>">
-                                                <?= number_format($article['views']) ?>
-                                            </td>
-                                            <td data-order="<?= strtotime($article['created_at']) ?>">
-                                                <?= date('M d, Y H:i', strtotime($article['created_at'])) ?>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href="view-article.php?id=<?= $article['id'] ?>" 
-                                                    class="btn btn-info btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="edit-article.php?id=<?= $article['id'] ?>" 
-                                                    class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <button type="button" 
-                                                            class="btn btn-danger btn-sm delete-article" 
-                                                            data-id="<?= $article['id'] ?>">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
@@ -394,7 +336,7 @@ require 'vendor/autoload.php';
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-primary" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php">Logout</a>
                 </div>
             </div>
         </div>
@@ -416,8 +358,7 @@ require 'vendor/autoload.php';
     <!-- Page level custom scripts -->
     <script src="View/pages/js/demo/chart-area-demo.js"></script>
     <script src="View/pages/js/demo/chart-pie-demo.js"></script>
-        <!-- Initialize the pie chart -->
-        <script>
+    <script>
     // Set new default font family and font color to mimic Bootstrap's default styling
     Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#858796';
