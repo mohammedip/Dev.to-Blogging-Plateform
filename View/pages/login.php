@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,12 +29,15 @@
                 <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                 </div>
-                <form class="user">
+                <form class="user" action="../../classes/User.php?function=logIn" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
-                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                        <input type="email" name="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                     </div>
                     <div class="form-group mb-3">
-                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                        <input type="password" name="password_hash" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                    </div>
+                    <div id="error-message" class="alert alert-danger d-none" role="alert">
+                        Password or email is incorrect.
                     </div>
                     <div class="form-group mb-3">
                         <div class="custom-control custom-checkbox small">
@@ -53,7 +58,14 @@
             </div>
         </div>
     </div>
+    <?php
 
+if (isset($_GET['logIn']) && $_GET['logIn'] == 'erreur') {
+    echo "<script>
+        document.getElementById('error-message').classList.remove('d-none');
+    </script>";
+}
+?>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
