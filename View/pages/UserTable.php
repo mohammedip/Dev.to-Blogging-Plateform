@@ -25,7 +25,7 @@ require_once '../../vendor/autoload.php';
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Custom styles for this template -->
     <link href="./css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -67,7 +67,7 @@ require_once '../../vendor/autoload.php';
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Tag DataTables</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">User DataTables</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -96,8 +96,10 @@ require_once '../../vendor/autoload.php';
                                                     <td>'.$user['profile_picture_url'].'</td>
                                                     <td>'.$user['role'].'</td>
                                                     <td>
-                                                        <a href="../Forms/UserUpdate.php" class="btn btn-warning btn-sm">Update</a>
-                                                        <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                                        <a href="../Forms/UserUpdate.php?id='.$user['id'].'" class="btn btn-warning btn-sm"><i class="fa-solid fa-pen"></i></a>
+                                                        <a href="../../classes/User.php?function=delete&id='.$user['id'].'" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+                                                        
+                                                        
                                                     </td>
                                                 </tr>';
                                         } ?>
