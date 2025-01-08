@@ -49,12 +49,18 @@ class Categorie {
     }
     public static function deleteCategorie(){
         if (isset($_GET['id'])) {
-            
+
+            CRUD::delete('articles','category_id=?',[$_GET['id']]);
             CRUD::delete('categories','id=?',[$_GET['id']]);
-            header("Location: ../pages/CategorieTable.php");
+            header("Location: ../View/pages/CategorieTable.php");
            
         }
     }
+//statistique----------------------
+public static function get_category_stats(){
+    return CRUD::getCategoryStats();
+}
+   
 }
 
 if (isset($_GET['function'])&& $_GET['function'] === 'add') {
