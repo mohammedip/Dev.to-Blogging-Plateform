@@ -31,31 +31,44 @@
                 <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                 </div>
-                <form class="user">
-                    <div class="form-group row mb-3">
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
-                        </div>
-                    </div>
+                <form class="user" action="../../classes/User.php?function=registre" method="POST">
+                    <!-- Username Field -->
                     <div class="form-group mb-3">
-                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
+                        <input type="text" name="username" class="form-control form-control-user" id="exampleUsername" placeholder="Username" required>
                     </div>
+
+                    <!-- Email Address -->
+                    <div class="form-group mb-3">
+                        <input type="email" name="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address" required>
+                    </div>
+
+                    <!-- Password and Confirm Password -->
                     <div class="form-group row mb-3">
                         <div class="col-sm-6">
-                            <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                            <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" required>
                         </div>
                         <div class="col-sm-6">
-                            <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Confirme Password">
+                            <input type="password" name="password_hash" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Confirm Password" required>
                         </div>
                     </div>
-                    <a href="login.php" class="btn btn-primary btn-user btn-block">
+
+                    <!-- Bio (Textarea for a longer description) -->
+                    <div class="form-group mb-3">
+                        <textarea class="form-control form-control-user square-border" id="exampleBio" name="bio" placeholder="Bio" rows="3"></textarea>
+                    </div>
+
+                    <!-- Profile Picture URL -->
+                    <div class="form-group mb-3">
+                        <input type="text" name="profile_picture_url" class="form-control form-control-user" id="exampleProfilePic" placeholder="Profile Picture URL">
+                    </div>
+
+                    <!-- Register Button -->
+                    <button type="submit" class="btn btn-primary btn-user btn-block" >
                         Register Account
-                    </a>
-                    
+                    </button>
+
                 </form>
+
                 <hr>
                 
                 <div class="text-center">
