@@ -1,17 +1,23 @@
 <?php
-
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 use App\Article;
+use App\Categorie;
 require_once '../../vendor/autoload.php';
 
-if(isset($_GET['search'])){
+// Charger les catégories dynamiques
+$categories = Categorie::getAllCategories();
+
+if (isset($_GET['search'])) {
+    if($_GET['search']==""){
+        $articles = Article::getAllArticles();
+    }else{
     $articles = Article::getArticleByCategory($_GET['search']);
-}else{
+    }
+} else {
     $articles = Article::getAllArticles();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -72,6 +78,18 @@ if(isset($_GET['search'])){
         .footer a {
             color: #ffd700;
         }
+        .sidebar {
+            height: 100vh;
+            border-right: 1px solid #dee2e6;
+        }
+        .sidebar .list-group-item {
+            border: none;
+            padding: 10px 15px;
+        }
+        .sidebar .list-group-item:hover {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -99,7 +117,7 @@ if(isset($_GET['search'])){
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"id="registre-btn">
+                    <li class="nav-item" id="registre-btn">
                         <a class="btn btn-outline-light mr-2" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/register.php">Register</a>
                     </li>
                     <li class="nav-item" id="login-btn">
@@ -113,66 +131,58 @@ if(isset($_GET['search'])){
         </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Latest Articles</h1>
-
-        <!-- Article List -->
+    <!-- Main Content Area with Sidebar -->
+    <div class="container-fluid">
         <div class="row">
-            <?php if ($articles): ?>
-                <?php foreach ($articles as $article): ?>
-                    <div class="col-md-4">
-                        <div class="card article-card">
-                            <!-- Article Image -->
-                            <span class="d-none"><?php echo $article['articles_id']; ?></span>
-                            <img src="<?php echo $article['featured_image'] ?: 'https://via.placeholder.com/350x200'; ?>" class="card-img-top" alt="Article Image">
-                            <div class="card-body">
-                                <h5 class="card-title article-title"><?php echo htmlspecialchars($article['title']); ?></h5>
-                                <!-- Category and Author -->
-                                <p class="card-text text-muted">
-                                    <strong>Category:</strong> 
-                                    <span style="font-size: 1.2em; font-weight: bold;" class="text-secondary">
-                                        <?php echo htmlspecialchars($article['categorie']); ?>
-                                    </span><br>
-                                    <strong>Author:</strong> 
-                                    <span style="font-size: 1.2em; font-weight: bold;" class="text-secondary">
-                                        <?php echo htmlspecialchars($article['auteurName']); ?>
-                                    </span>
-                                </p>
-                                <!-- Article Summary -->
-                                <p class="card-text article-summary">
-                                    <?php echo htmlspecialchars(substr($article['content'], 0, 150)) . '...'; ?>
-                                </p>
-                                <!-- Read More Button -->
-                                <a href="../Forms/singleArticle.php?slug=<?php echo $article['article_slug']; ?>" class="btn btn-primary">Read More</a>
+            <!-- Sidebar -->
+            <div class="col-md-3 bg-light sidebar py-4">
+                <h5 class="mb-3">Categories</h5>
+                <ul class="list-group">
+                    <?php foreach ($categories as $category): ?>
+                        <li class="list-group-item">
+                            <a href="#" class="text-decoration-none text-dark">
+                                <?= htmlspecialchars($category['name']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="container mt-5">
+                    <h1 class="text-center mb-4">Latest Articles</h1>
+                    <div class="row">
+                        <?php if ($articles): ?>
+                            <?php foreach ($articles as $article): ?>
+                                <div class="col-md-4">
+                                    <div class="card article-card">
+                                        <img src="<?php echo $article['featured_image'] ?: 'https://via.placeholder.com/350x200'; ?>" class="card-img-top" alt="Article Image">
+                                        <div class="card-body">
+                                            <h5 class="card-title article-title"><?php echo htmlspecialchars($article['title']); ?></h5>
+                                            <p class="card-text text-muted">
+                                                <strong>Category:</strong> <?= htmlspecialchars($article['categorie']); ?><br>
+                                                <strong>Author:</strong> <?= htmlspecialchars($article['auteurName']); ?>
+                                            </p>
+                                            <p class="card-text article-summary">
+                                                <?php echo htmlspecialchars(substr($article['content'], 0, 150)) . '...'; ?>
+                                            </p>
+                                            <a href="../Forms/singleArticle.php?slug=<?php echo $article['article_slug']; ?>" class="btn btn-primary">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-12">
+                                <p>No articles found.</p>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="col-12">
-                    <p>No articles found.</p>
                 </div>
-            <?php endif; ?>
-        </div>
-    </div>
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php">Logout</a>
             </div>
         </div>
     </div>
-</div>
+
     <!-- Footer -->
     <footer class="footer text-center">
         <div class="container">
@@ -181,22 +191,22 @@ if(isset($_GET['search'])){
             </div>
         </div>
     </footer>
+
+    <!-- Session-Specific JS -->
     <?php 
-    if(!isset($_SESSION['auth']) ){
-       
-echo '<script>
-document.getElementById("dashboard-btn").classList.add("d-none");
-</script>';
-}else{
+    if (!isset($_SESSION['auth'])) {
+        echo '<script>
+        document.getElementById("dashboard-btn").classList.add("d-none");
+        </script>';
+    } else {
+        echo '<script>
+        document.getElementById("login-btn").classList.add("d-none");
+        document.getElementById("registre-btn").classList.add("d-none");
+        </script>';
+    }
+    ?>
 
-    echo '<script>
-document.getElementById("login-btn").classList.add("d-none");
-document.getElementById("registre-btn").classList.add("d-none");
-</script>';
-}
-
-?>
-    <!-- Bootstrap JS and dependencies (optional) -->
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
