@@ -8,6 +8,8 @@ use App\Article;
 use App\Tag;
 
 require_once '../../vendor/autoload.php';
+
+Article::updateView($_GET['slug']);
 ?>
 
 <!DOCTYPE html>
