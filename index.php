@@ -266,7 +266,7 @@ foreach ($category_stats as $stat) {
                         </div>
                     </div>
                     <div class="ml-2">
-                        <a href="./View/Forms/singleArticle.php?id=<?= $article['id'] ?>"
+                        <a href="./View/Forms/singleArticle.php?slug=<?= $article['slug'] ?>"
                            class="btn btn-success btn-sm">
                             Read Article
                         </a>
