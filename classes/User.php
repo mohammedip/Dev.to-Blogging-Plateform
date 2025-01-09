@@ -104,7 +104,13 @@ public static function logIn() {
       foreach ($users as $user) {
 
          if($user['email']==$email && password_verify($password_hash, $user['password_hash'])){
-            
+            session_start();
+            $_SESSION['auth'] =true;
+            $_SESSION['user'] = [
+               'id' => $user['id'],
+               'username' => $user['username'],
+               'role' => $user['role']
+           ];
             return $user;
          }else if(($user['email']!==$email || !password_verify($password_hash, $user['password_hash'])) ){
             continue;
@@ -148,11 +154,11 @@ if (isset($_GET['function'])&& $_GET['function'] === 'add') {
       
       header("Location: ../View/pages/login.php?logIn=erreur");
    }else if($user['role']==='user'){
-      header("Location: ../View/pages/scrolingArticle.php?id=".$user['id']);
+      header("Location: ../View/pages/scrolingArticle.php");
    }else if($user['role']==='auteur'){
-      header("Location: ../index.php?id=".$user['id']);
+      header("Location: ../View/pages/ArticleTable.php");
    }else if($user['role']==='admin'){
-      header("Location: ../index.php?id=".$user['id']);
+      header("Location: ../index.php");
    }
 }
 
