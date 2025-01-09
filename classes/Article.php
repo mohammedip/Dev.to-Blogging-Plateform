@@ -1,6 +1,9 @@
 <?php
-namespace App;
 
+namespace App;
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 use App\CRUD;
 require_once dirname(__DIR__) . './vendor/autoload.php'; 
 
@@ -80,7 +83,64 @@ class Article{
     
     }
 
-    public static function getArticle($id) {
+    public static function getArticle($slug) {
+        $articles = CRUD::select(
+            'articles a 
+            JOIN categories c ON a.category_id = c.id
+            JOIN users u ON a.author_id = u.id
+            LEFT JOIN article_tags at ON a.id = at.article_id 
+            LEFT JOIN tags t ON at.tag_id = t.id',
+            'a.id AS articles_id,
+            a.title AS title,
+            c.name AS categorie,
+            u.username AS auteurName,
+            a.slug AS article_slug,
+            a.content AS content,
+            a.category_id,
+            a.featured_image,
+            a.status,
+            a.scheduled_date,
+            a.author_id,
+            a.created_at,
+            a.updated_at,
+            a.views,
+            GROUP_CONCAT(t.name ORDER BY t.name ASC) AS tags_name', 
+            'a.slug = ?',
+            [$slug]
+        );
+        
+        return $articles;
+    }
+    public static function getArticleByCategory($category) {
+        $articles = CRUD::select(
+            'articles a 
+            JOIN categories c ON a.category_id = c.id
+            JOIN users u ON a.author_id = u.id
+            LEFT JOIN article_tags at ON a.id = at.article_id 
+            LEFT JOIN tags t ON at.tag_id = t.id',
+            'a.id AS articles_id,
+            a.title AS title,
+            c.name AS categorie,
+            u.username AS auteurName,
+            a.slug AS article_slug,
+            a.content AS content,
+            a.category_id,
+            a.featured_image,
+            a.status,
+            a.scheduled_date,
+            a.author_id,
+            a.created_at,
+            a.updated_at,
+            a.views,
+            GROUP_CONCAT(t.name ORDER BY t.name ASC) AS tags_name', 
+            'c.name = ? GROUP BY a.id',
+            [$category]
+        );
+        
+        return $articles;
+    }
+
+    public static function getArticleByAuteur($id) {
         $articles = CRUD::select(
             'articles a 
             JOIN categories c ON a.category_id = c.id
@@ -102,7 +162,7 @@ class Article{
             a.updated_at,
             a.views,
             GROUP_CONCAT(t.name ORDER BY t.name ASC) AS tags_name', // Concatenate tag names
-            'a.id = ?',
+            'u.id = ?GROUP BY a.id',
             [$id]
         );
         
@@ -165,7 +225,9 @@ class Article{
             } else {
                 echo "No image uploaded or error with the image.";
             }
-            self::$author_id = $_POST['author_id'];
+            
+ 
+            self::$author_id = $_SESSION['user']['id'];
     
             $article = [                
                 'title' => self::$title,          
