@@ -341,7 +341,19 @@ class Article{
         return CRUD::getTopArticles();
     }
 
+
+public static function updateView($slug){
+    $views=self::getArticle($slug);
+    $views[0]['views']+=1;
+    $article = [
+        'views' => $views[0]['views']
+    ];
+    CRUD::update('articles', $article, 'slug=?', [$_GET['slug']]);
+
+   
 }
+
+} 
 
 
 if (isset($_GET['function'])&& $_GET['function'] === 'add') {
