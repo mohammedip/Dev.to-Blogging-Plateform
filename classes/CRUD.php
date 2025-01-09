@@ -52,7 +52,7 @@ class CRUD {
 
 // statistique ------------------------------------
 
-public static function getTopArticles($limit = 5)
+public static function getTopArticles($limit = 3)
 {
     try {
         $sql = "SELECT a.*, u.username
@@ -69,7 +69,7 @@ public static function getTopArticles($limit = 5)
         return [];
     }
 }
-public static function getTopUsers($limit = 5) {
+public static function getTopUsers($limit = 3) {
     try {
         $sql = "SELECT u.*, COUNT(a.id) as article_count, SUM(a.views) as total_views
                 FROM users u
