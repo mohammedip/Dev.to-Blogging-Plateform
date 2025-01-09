@@ -1,4 +1,21 @@
 <?php
+
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if(!$_SESSION['auth']){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php");
+    exit();
+}
+if ($_SESSION['user']['role']=="auteur"){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/ArticleTable.php");
+}else if ($_SESSION['user']['role']=="user"){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/scrolingArticle.php");
+}
+$userId = $_SESSION['user']['id'] ;
+
+
 use App\Tag;
 use App\Categorie;
 use App\User;
