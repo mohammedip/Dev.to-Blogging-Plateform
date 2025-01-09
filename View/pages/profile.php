@@ -1,10 +1,22 @@
 <?php
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if(!$_SESSION['auth']){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php");
+    exit();
+}
 use App\User; 
 
 require_once '../../vendor/autoload.php';
 
- $user = User::getUser($_GET['id']); 
+if (isset($_GET['id'])) {
+$id =$_GET['id'];
+}else{
+$id =$_SESSION['user']['id'] ;
+}
+ $user = User::getUser($id); 
  foreach ($user as $user) 
 ?>
 
@@ -75,6 +87,7 @@ require_once '../../vendor/autoload.php';
                                     <h3 class="text-gray-800"><?php echo $user['username']; ?></h3>
                                     <p>Email: <?php echo $user['email']; ?></p>
                                     <p>Bio: <?php echo $user['bio']; ?></p>
+                                    <p>Role: <?php echo $user['role']; ?></p>
 
                                     <!-- Edit Profile Button -->
                                     <a href="../Forms/UserUpdate.php?id=<?php echo $user['id']; ?>" class="btn btn-warning btn-sm">Edit Profile</a>
@@ -105,24 +118,23 @@ require_once '../../vendor/autoload.php';
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="./login.php">Logout</a>
-                </div>
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php">Logout</a>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="./vendor/jquery/jquery.min.js"></script>

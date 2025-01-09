@@ -1,6 +1,11 @@
 <?php
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 use App\Categorie;
 use App\Article;
+use App\Tag;
 
 require_once '../../vendor/autoload.php';
 ?>
@@ -41,9 +46,10 @@ require_once '../../vendor/autoload.php';
         }
 
         .main-content {
-            margin-left: 250px; /* Ensure content doesn't overlap the sidebar */
+            margin: 0 auto; 
             padding: 20px;
-            flex: 1; /* Takes up remaining space */
+            max-width: 700px; 
+            flex: 1; 
         }
 
         .article-card {
@@ -53,8 +59,9 @@ require_once '../../vendor/autoload.php';
             background-color: #fff;
             padding: 30px;
             margin-top: 30px;
-            width: 100%;
+            width: 100%; 
         }
+
 
         .article-header {
             font-size: 32px;
@@ -78,6 +85,8 @@ require_once '../../vendor/autoload.php';
             line-height: 1.8;
             color: #444;
             margin-bottom: 20px;
+            
+
         }
 
         .article-image {
@@ -135,16 +144,25 @@ require_once '../../vendor/autoload.php';
 
 <div class="wrapper">
     <!-- Sidebar -->
-    <?php include '../pages/components/sidebar.php'; ?>
+    <?php
+        if(isset($_SESSION['user']) && ($_SESSION['user']['role']==='admin' || $_SESSION['user']['role']==='auteur')){
+            include '../pages/components/sidebar.php';
+            
+         }
+        ?>
+
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content ">
         <?php
-        // Fetch the article data using the ID from the URL
-        $article = Article::getArticle($_GET['id']);
+        $article = Article::getArticle($_GET['slug']);
         foreach ($article as $article) {
         ?>
         <div class="article-card">
+              <!-- Article Featured Image -->
+              <?php if ($article['featured_image']) { ?>
+            <img src="<?php echo $article['featured_image']; ?>" alt="Featured Image" class="article-image" width="500">
+            <?php } ?>
             <!-- Article Title -->
             <div class="article-header"><?php echo htmlspecialchars($article['title']); ?></div>
 
@@ -161,12 +179,6 @@ require_once '../../vendor/autoload.php';
             <div class="article-content">
                 <?php echo nl2br(htmlspecialchars($article['content'])); ?>
             </div>
-
-            <!-- Article Featured Image -->
-            <?php if ($article['featured_image']) { ?>
-            <img src="<?php echo $article['featured_image']; ?>" alt="Featured Image" class="article-image">
-            <?php } ?>
-
             <!-- Article Status -->
             <div class="article-meta">
                 <span class="category"><?php echo htmlspecialchars($article['categorie']); ?></span>
@@ -174,15 +186,33 @@ require_once '../../vendor/autoload.php';
                     <?php echo ucfirst($article['status']); ?>
                 </span>
             </div>
-        </div>
+
+            <!-- Tags -->
+
+            <div class="article-meta">
+                <?php 
+                $tags = Tag::getAllTags(); 
+                $articleTags = Article::getArticle($_GET['slug']); 
+                $articleTagNames = explode(',', $articleTags[0]['tags_name']);
+                
+                foreach ($tags as $tag): ?>
+                    <?php if (in_array($tag['name'], $articleTagNames)): ?>
+                        <span class="badge border rounded-pill p-2 me-2 <?php echo in_array($tag['name'], $articleTagNames) ? 'bg-success text-white' : 'bg-light text-primary'; ?>">
+                            <?php echo htmlspecialchars($tag['name']); ?>
+                        </span>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+
+
+
 
         <!-- Back Button -->
-        <a href="../pages/ArticleTable.php" class="back-button">Back to Articles List</a>
-
+        <a href="../pages/scrolingArticle.php" class="back-button" id="back_button">Back to the Home page</a>
         <?php
         }
         ?>
-    </div>
+  
 </div>
 
 <!-- Bootstrap JS and dependencies -->

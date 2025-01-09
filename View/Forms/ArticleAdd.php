@@ -1,5 +1,15 @@
 <?php
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if(!$_SESSION['auth']){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php");
+    exit();
+}
+if($_SESSION['user']['role']==='user'){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/scrolingArticle.php");
+ }
 use App\Categorie;
 use App\User;
 use App\Tag;
@@ -65,20 +75,6 @@ require_once '../../vendor/autoload.php';
                             <div class="form-group mb-4">
                                 <label for="content">Contenu de l'article :</label>
                                 <textarea class="form-control" id="content" name="content" rows="4" placeholder="Entrez le contenu de l'article" required></textarea>
-                            </div>
-
-                            <!-- Author ID input -->
-                            <div class="form-group mb-4">
-                                <label for="author_id">Auteur :</label>
-                                <select class="form-control" id="author_id" name="author_id" required>
-                                    <option value="" disabled selected hidden>Sélectionner l'auteur</option>
-                                    <?php
-                                        $auteurs = User::getAuteurs();
-                                        foreach ($auteurs as $auteur) {
-                                            echo '<option value="' . $auteur['id'] . '">' . $auteur['username'] . '</option>';
-                                        }
-                                    ?>
-                                </select>
                             </div>
 
                             <!-- Category selection -->

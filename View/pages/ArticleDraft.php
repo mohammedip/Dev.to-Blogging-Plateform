@@ -1,8 +1,20 @@
 <?php
-
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if($_SESSION['user']['role']==='user'){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/scrolingArticle.php");
+ }else if($_SESSION['user']['role']==='auteur'){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/ArticleTable.php");
+ }
 use App\Article;
 
 require_once '../../vendor/autoload.php';
+
+if(!$_SESSION['auth']){
+    header("Location: http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php");
+    exit();
+}
 ?>
 
 
@@ -50,19 +62,13 @@ require_once '../../vendor/autoload.php';
 
                 <!-- Topbar -->
               
-
+                <?php include '../pages/components/topbar.php'; ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="header-container d-flex justify-content-between align-items-center">
-                        <h1 class="h3 mb-2 mt-4 text-gray-800">Table</h1>
-                        <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Logout
-                        </a>
-                    </div>
+                    
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -144,24 +150,23 @@ require_once '../../vendor/autoload.php';
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="./login.php">Logout</a>
-                </div>
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="http://localhost/Dev.to-Blogging-Plateform/View/pages/login.php">Logout</a>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="./vendor/jquery/jquery.min.js"></script>
